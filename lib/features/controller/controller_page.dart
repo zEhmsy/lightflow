@@ -53,15 +53,16 @@ class ControllerPage extends StatelessWidget {
                                 crossAxisSpacing: 12,
                                 itemCount: ControllerVm.nStrips,
                                 itemBuilder: (ctx, i) => StripCard(
+                                  key: ValueKey('strip_$i'),
                                   index: i,
                                   name: vm.names[i],
                                   state: vm.strips[i],
                                   maxN: ControllerVm.maxN,
-                                  animated: vm.animated[i], // NEW
-                                  onToggleAnimated: (v) => vm.setAnimated(i, v), // NEW
-                                  onChanged: (st) => vm.update(i, st),
-                                  onRename: (newName) => vm.rename(i, newName),
-                                  onApply: () async {
+                                  animated: vm.animated[i],
+                                  onToggleAnimated: (v) => vm.setAnimated(i, v),             // auto-apply
+                                  onChanged: (st) => vm.updateAndAutoApply(i, st),           // auto-apply
+                                  onRename: (newName) => vm.rename(i, newName),              // solo persistenza nome
+                                  onApply: () async {                                        // fallback manuale
                                     try { await vm.apply(i); }
                                     catch (e) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore /set: $e'))); }
                                   },
@@ -84,7 +85,10 @@ class ControllerPage extends StatelessWidget {
                                         actions: [
                                           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annulla')),
                                           FilledButton(
-                                            onPressed: () { vm.update(i, vm.strips[i].copyWith(c: temp)); Navigator.pop(ctx); },
+                                            onPressed: () {
+                                              vm.updateAndAutoApply(i, vm.strips[i].copyWith(c: temp)); // auto-apply
+                                              Navigator.pop(ctx);
+                                            },
                                             child: const Text('Seleziona'),
                                           ),
                                         ],

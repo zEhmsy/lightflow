@@ -3,8 +3,16 @@ import 'package:flutter/foundation.dart';
 import '../../core/models/strip_state.dart';
 import '../../core/repositories/led_repository.dart';
 import '../../core/storage/settings_store.dart';
+import 'dart:async';
 
 class ControllerVm extends ChangeNotifier {
+  // Delay per coalescere input rapidi (slider, carosello, ecc.)
+  final Duration _debounceDelay = const Duration(milliseconds: 350);
+  // Timer per-strip
+  final List<Timer?> _debounce = List<Timer?>.filled(nStrips, null, growable: false);
+  // Stato invii in corso / pendenti (per evitare sovrapposizioni)
+  final List<bool> _inFlight = List<bool>.filled(nStrips, false, growable: false);
+  final List<bool> _pending  = List<bool>.filled(nStrips, false, growable: false);
   final LedRepository repo;
   final SettingsStore store;
   static const nStrips = 8;
@@ -52,7 +60,6 @@ class ControllerVm extends ChangeNotifier {
   }
 
   void update(int i, StripState st) { strips[i] = st; notifyListeners(); }
-  void setAnimated(int i, bool v) { animated[i] = v; notifyListeners(); }
 
   Future<void> apply(int which) async {
     final idx = which == -1 ? 0 : which; // UI usa solo 0..7
@@ -67,5 +74,39 @@ class ControllerVm extends ChangeNotifier {
     names[i] = nn;
     notifyListeners();
     await store.setStripNames(names);
+  }
+
+  void updateAndAutoApply(int i, StripState st) {
+    strips[i] = st;
+    notifyListeners();
+    _scheduleApply(i);
+  }
+
+  void setAnimated(int i, bool v) {
+    animated[i] = v;
+    notifyListeners();
+    _scheduleApply(i);
+  }
+
+  void _scheduleApply(int i) {
+    _debounce[i]?.cancel();
+    _debounce[i] = Timer(_debounceDelay, () => _sendApply(i));
+  }
+
+  Future<void> _sendApply(int i) async {
+    if (_inFlight[i]) { _pending[i] = true; return; }
+    _inFlight[i] = true;
+    try {
+      await repo.apply(i, strips[i], animated: animated[i]);
+      // niente load() qui: manteniamo la UI reattiva; lo stato locale è già aggiornato
+    } catch (_) {
+      // opzionale: log/telemetria
+    } finally {
+      _inFlight[i] = false;
+      if (_pending[i]) {
+        _pending[i] = false;
+        _scheduleApply(i); // invia l’ultimo stato rimasto indietro
+      }
+    }
   }
 }
