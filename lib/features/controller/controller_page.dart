@@ -24,7 +24,7 @@ class ControllerPage extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final vm = context.watch<ControllerVm>();
-          
+
           return Scaffold(
             appBar: AppBar(
               title: const Text('Sitec LightFlow'),
@@ -57,6 +57,8 @@ class ControllerPage extends StatelessWidget {
                                   name: vm.names[i],
                                   state: vm.strips[i],
                                   maxN: ControllerVm.maxN,
+                                  animated: vm.animated[i], // NEW
+                                  onToggleAnimated: (v) => vm.setAnimated(i, v), // NEW
                                   onChanged: (st) => vm.update(i, st),
                                   onRename: (newName) => vm.rename(i, newName),
                                   onApply: () async {

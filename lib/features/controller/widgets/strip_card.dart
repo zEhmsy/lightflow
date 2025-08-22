@@ -12,6 +12,8 @@ class StripCard extends StatefulWidget {
   final ValueChanged<String> onRename;       // NEW
   final VoidCallback onApply;
   final VoidCallback onPickColor;
+  final bool animated;
+  final ValueChanged<bool> onToggleAnimated;
 
   const StripCard({
     super.key,
@@ -23,6 +25,8 @@ class StripCard extends StatefulWidget {
     required this.onRename,
     required this.onApply,
     required this.onPickColor,
+    required this.animated,
+    required this.onToggleAnimated,
   });
 
   @override
@@ -46,7 +50,7 @@ class _StripCardState extends State<StripCard> {
 
   void _setN(int v) => widget.onChanged(state.copyWith(n: v.clamp(1, widget.maxN)));
   void _setB(int v) => widget.onChanged(state.copyWith(b: v.clamp(0, 255)));
-  void _setS(int v) => widget.onChanged(state.copyWith(s: v.clamp(1, 1000)));
+  void _setS(int v) => widget.onChanged(state.copyWith(s: v.clamp(1, 50)));
   void _setC(Color c) => widget.onChanged(state.copyWith(c: c));
 
   @override
@@ -184,7 +188,17 @@ class _StripCardState extends State<StripCard> {
                             Text('${state.n}/${widget.maxN}', style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()])),
                           ],
                         ),
-
+                        Row(
+                          children: [
+                            const _Label('Animazione'),
+                            Switch(
+                              value: widget.animated,
+                              onChanged: widget.onToggleAnimated,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(widget.animated ? 'Attiva' : 'Statica'),
+                          ],
+                        ),
                         // Brightness
                         Row(
                           children: [
@@ -219,8 +233,11 @@ class _StripCardState extends State<StripCard> {
                               child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(trackHeight: 3),
                                 child: Slider(
-                                  value: state.s.toDouble(), min: 1, max: 1000, divisions: 999,
-                                  label: '${state.s} ms', onChanged: (v) => _setS(v.round()),
+                                  value: state.s.toDouble(), min: 1,
+                                  max: 50,          // prima era 1000
+                                  divisions: 49,    // 1..50
+                                  label: '${state.s} ms',
+                                  onChanged: (v) => _setS(v.round()),
                                 ),
                               ),
                             ),
@@ -345,7 +362,7 @@ class _MiniCarouselState extends State<_MiniCarousel> {
   void initState() {
     super.initState();
     _index = _indexFor(widget.selected);
-    _ctrl = PageController(viewportFraction: 0.35, initialPage: _index);
+    _ctrl = PageController(viewportFraction: 0.50, initialPage: _index);
   }
 
   @override
@@ -367,7 +384,7 @@ class _MiniCarouselState extends State<_MiniCarousel> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 60,
       child: PageView.builder(
         controller: _ctrl,
         itemCount: widget.colors.length,
@@ -413,7 +430,7 @@ class _Dot extends StatelessWidget {
   const _Dot({required this.color, required this.selected});
   @override
   Widget build(BuildContext context) {
-    final size = selected ? 20.0 : 16.0;
+    final size = selected ? 30.0 : 22.0;
     return Container(
       width: size, height: size,
       decoration: BoxDecoration(

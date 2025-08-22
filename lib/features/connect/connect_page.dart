@@ -4,6 +4,7 @@ import '../../core/services/led_api.dart';
 import '../../core/repositories/led_repository.dart';
 import '../../core/storage/settings_store.dart';
 import '../controller/controller_page.dart';
+import 'discovery_page.dart';
 
 class ConnectPage extends StatefulWidget {
   const ConnectPage({super.key});
@@ -62,7 +63,7 @@ class _ConnectPageState extends State<ConnectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Controller 8 Strisce LED')),
+      appBar: AppBar(title: const Text('LightFlow')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
@@ -71,7 +72,7 @@ class _ConnectPageState extends State<ConnectPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Inserisci IP o IP:porta del microcontrollore'),
+                const Text('Inserisci IP (porta del microcontrollore)'),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _ipCtrl,
@@ -91,6 +92,17 @@ class _ConnectPageState extends State<ConnectPage> {
                         ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.power_settings_new),
                     label: const Text('Connetti'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _loading ? null : () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const DiscoveryPage()),
+                    ),
+                    icon: const Icon(Icons.wifi_tethering),
+                    label: const Text('Scansione automatica (LAN)'),
                   ),
                 ),
               ],
