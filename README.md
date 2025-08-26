@@ -4,7 +4,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-<!-- PROJECT LOGO --> <div align="center"> <a href="https://github.com/YOUR_GH_USER/LightFlow"> <img src="assets/icon/lightflow_icon_1024.png" alt="LightFlow logo" width="96" height="96"> </a> <h3 align="center">LightFlow</h3> <p align="center"> Flutter controller + Arduino firmware for multi-strip <strong>WS2812B</strong> LED rigs.<br> Zero-tap discovery (<strong>mDNS/Bonjour</strong> → <strong>UDP</strong> → <strong>HTTP sweep</strong>), fast per-strip control via a tiny REST API. <br /><br /> <a href="https://github.com/YOUR_GH_USER/LightFlow"><strong>Explore the docs »</strong></a> · <a href="https://github.com/YOUR_GH_USER/LightFlow/issues">Report Bug</a> · <a href="https://github.com/YOUR_GH_USER/LightFlow/issues">Request Feature</a> </p> </div>
+<!-- PROJECT LOGO --> <div align="center"> <a href="https://github.com/zehmsy/LightFlow"> <img src="assets/icon/lightflow_icon_1024.png" alt="LightFlow logo" width="96" height="96"> </a> <h3 align="center">LightFlow</h3> <p align="center"> Flutter controller + Arduino firmware for multi-strip <strong>WS2812B</strong> LED rigs.<br> Zero-tap discovery (<strong>mDNS/Bonjour</strong> → <strong>UDP</strong> → <strong>HTTP sweep</strong>), fast per-strip control via a tiny REST API. <br /><br /> <a href="https://github.com/zehmsy/LightFlow"><strong>Explore the docs »</strong></a> · <a href="https://github.com/zehmsy/LightFlow/issues">Report Bug</a> · <a href="https://github.com/zehmsy/LightFlow/issues">Request Feature</a> </p> </div>
 
 <!-- TABLE OF CONTENTS --> <details> <summary>Table of Contents</summary> <ol> <li><a href="#about-the-project">About&nbsp;The&nbsp;Project</a></li> <li><a href="#features">Key&nbsp;Features</a></li> <li><a href="#built-with">Built&nbsp;With</a></li> <li> <a href="#getting-started">Getting&nbsp;Started</a> <ul> <li><a href="#prerequisites">Prerequisites</a></li> <li><a href="#install-app">Install&nbsp;(Flutter&nbsp;App)</a></li> <li><a href="#firmware-arduino">Firmware&nbsp;(Arduino)</a></li> </ul> </li> <li><a href="#usage">Usage</a></li> <li><a href="#screenshots">Screenshots</a></li> <li> <a href="#mobile-notes">iOS&nbsp;&amp;&nbsp;Android&nbsp;Notes</a> <ul> <li><a href="#ios-entitlements">iOS&nbsp;Entitlements&nbsp;&amp;&nbsp;Info.plist</a></li> <li><a href="#android-permissions">Android&nbsp;Permissions</a></li> </ul> </li><li><a href="#arduino-hardware">Arduino&nbsp;Hardware</a></li> <li><a href="#arduino-code">Arduino&nbsp;Code</a></li>
  <li><a href="#directory-structure">Directory&nbsp;Structure</a></li> <li><a href="#roadmap">Roadmap</a></li> <li><a href="#contributing">Contributing</a></li> <li><a href="#license">License</a></li> <li><a href="#contact">Contact</a></li> </ol> </details>
@@ -18,7 +18,7 @@
 > There is a fallback http page interface for the testing too.
 
 <p align="center">
-  <video src="docs/demo.mp4" autoplay loop muted playsinline controls width="720"></video>
+  <img src="docs/demo.gif" width="720"></img>
 </p>
 
 Why it exists: classic UDP broadcast discovery is often **blocked on iOS** without special entitlements. LightFlow solves that by **layered discovery**—it first uses **mDNS** (allowed on iOS), then tries the legacy **UDP JSON** ping, and finally falls back to a **lightweight HTTP /24 sweep** to guarantee the device is found.
@@ -711,3 +711,16 @@ See [`LICENSE`](LICENSE) for full text.
 If you liked this project, consider starring ⭐ the repo. Thank you!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- SHIELDS MARKDOWN -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/zEhmsy/lightflow.svg?style=for-the-badge
+[contributors-url]: https://github.com/zEhmsy/lightflow/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/zEhmsy/lightflow.svg?style=for-the-badge
+[forks-url]: https://github.com/zEhmsy/lightflow/network/members
+[stars-shield]: https://img.shields.io/github/stars/zEhmsy/lightflow.svg?style=for-the-badge
+[stars-url]: https://github.com/zEhmsy/lightflow/stargazers
+[issues-shield]: https://img.shields.io/github/issues/zEhmsy/lightflow.svg?style=for-the-badge
+[issues-url]: https://github.com/zEhmsy/lightflow/issues
+[license-shield]: https://img.shields.io/badge/license-Apache%202.0-green.svg?style=for-the-badge
+[license-url]: https://github.com/zEhmsy/lightflow/blob/main/LICENSE
